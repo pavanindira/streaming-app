@@ -1,0 +1,10 @@
+Attempting to fetch albums...
+Error fetching albums: EagerLoadingError [SequelizeEagerLoadingError]: Song is not associated to Album!
+    at Album._getIncludedAssociation (D:\Projects\streaming-app\streaming-app\backend\node_modules\sequelize\lib\model.js:565:13)
+    at Album._validateIncludedElement (D:\Projects\streaming-app\streaming-app\backend\node_modules\sequelize\lib\model.js:502:53)
+    at D:\Projects\streaming-app\streaming-app\backend\node_modules\sequelize\lib\model.js:421:37
+    at Array.map (<anonymous>)
+    at Album._validateIncludedElements (D:\Projects\streaming-app\streaming-app\backend\node_modules\sequelize\lib\model.js:417:39)
+    at Album.findAll (D:\Projects\streaming-app\streaming-app\backend\node_modules\sequelize\lib\model.js:1124:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async run (D:\Projects\streaming-app\streaming-app\backend\debug-albums.js:6:24)

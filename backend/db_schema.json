@@ -1,0 +1,34 @@
+{
+  "createdAt": {
+    "type": "TIMESTAMP WITH TIME ZONE",
+    "allowNull": false,
+    "defaultValue": null,
+    "comment": null,
+    "special": [],
+    "primaryKey": false
+  },
+  "updatedAt": {
+    "type": "TIMESTAMP WITH TIME ZONE",
+    "allowNull": false,
+    "defaultValue": null,
+    "comment": null,
+    "special": [],
+    "primaryKey": false
+  },
+  "playlist_id": {
+    "type": "INTEGER",
+    "allowNull": false,
+    "defaultValue": null,
+    "comment": null,
+    "special": [],
+    "primaryKey": true
+  },
+  "SongId": {
+    "type": "INTEGER",
+    "allowNull": false,
+    "defaultValue": null,
+    "comment": null,
+    "special": [],
+    "primaryKey": true
+  }
+}

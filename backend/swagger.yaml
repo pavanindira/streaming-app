@@ -1,0 +1,1045 @@
+openapi: 3.0.0
+info:
+  title: Music Streaming API
+  version: 1.0.0
+  description: API documentation for the Music Streaming application.
+
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+tags:
+  - name: Users
+    description: User management APIs
+  - name: Albums
+    description: Album management APIs
+  - name: Songs
+    description: Song management APIs
+  - name: Playlists
+    description: Playlist management APIs
+  - name: Artists
+    description: Artist management APIs
+  - name: Categories
+    description: Category management APIs
+  - name: Audiobooks
+    description: Audiobook management APIs
+
+paths:
+  /users/register:
+    post:
+      summary: Register a new user
+      description: Creates a new user account.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: testuser
+                email:
+                  type: string
+                  example: test@example.com
+                password:
+                  type: string
+                  example: password123
+              required:
+                - username
+                - email
+                - password
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User registered successfully
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      username:
+                        type: string
+                        example: testuser
+                      email:
+                        type: string
+                        example: test@example.com
+        '400':
+          description: Bad request (e.g., email already registered)
+        '500':
+          description: Internal server error
+
+  /users/login:
+    post:
+      summary: Login a user
+      description: Authenticates a user and returns a JWT token.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: test@example.com
+                password:
+                  type: string
+                  example: password123
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: your-jwt-token
+                  message:
+                    type: string
+                    example: Login successful
+        '401':
+          description: Invalid email or password
+        '500':
+          description: Internal server error
+
+  /users:
+    post:
+      summary: Create a new user
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Validation error
+    get:
+      summary: Get all users
+      tags: [Users]
+      responses:
+        '200':
+          description: List of users
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User retrieved successfully
+        '404':
+          description: User not found
+    put:
+      summary: Update a user by ID
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: User updated successfully
+        '404':
+          description: User not found
+    delete:
+      summary: Delete a user by ID
+      tags: [Users]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted successfully
+        '404':
+          description: User not found
+
+  /albums:
+    post:
+      summary: Create a new album
+      tags: [Albums]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                artist_id:
+                  type: integer
+                release_date:
+                  type: string
+                  format: date
+                cover_image_url:
+                  type: string
+      responses:
+        '201':
+          description: Album created successfully
+        '400':
+          description: Validation error
+    get:
+      summary: Get all albums
+      tags: [Albums]
+      responses:
+        '200':
+          description: List of albums
+  /albums/{id}:
+    get:
+      summary: Get an album by ID
+      tags: [Albums]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Album retrieved successfully
+        '404':
+          description: Album not found
+    put:
+      summary: Update an album by ID
+      tags: [Albums]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                artist_id:
+                  type: integer
+                release_date:
+                  type: string
+                  format: date
+                cover_image_url:
+                  type: string
+      responses:
+        '200':
+          description: Album updated successfully
+        '404':
+          description: Album not found
+    delete:
+      summary: Delete an album by ID
+      tags: [Albums]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Album deleted successfully
+        '404':
+          description: Album not found
+
+  /songs:
+    post:
+      summary: Upload a new song
+      tags: [Songs]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                artist_id:
+                  type: integer
+                album_id:
+                  type: integer
+                genre:
+                  type: string
+                duration:
+                  type: integer
+                file_url:
+                  type: string
+                cover_image_url:
+                  type: string
+                release_date:
+                  type: string
+                  format: date
+      responses:
+        '201':
+          description: Song uploaded successfully
+        '400':
+          description: Validation error
+    get:
+      summary: Get all songs
+      tags: [Songs]
+      responses:
+        '200':
+          description: List of songs
+  /songs/{id}:
+    get:
+      summary: Get a song by ID
+      tags: [Songs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Song retrieved successfully
+        '404':
+          description: Song not found
+    put:
+      summary: Update a song by ID
+      tags: [Songs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                artist_id:
+                  type: integer
+                album_id:
+                  type: integer
+                genre:
+                  type: string
+                duration:
+                  type: integer
+                file_url:
+                  type: string
+                cover_image_url:
+                  type: string
+                release_date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Song updated successfully
+        '404':
+          description: Song not found
+    delete:
+      summary: Delete a song by ID
+      tags: [Songs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Song deleted successfully
+        '404':
+          description: Song not found
+
+  /playlists:
+    post:
+      summary: Create a new playlist
+      tags: [Playlists]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the playlist
+                description:
+                  type: string
+                  description: Description of the playlist
+                is_public:
+                  type: boolean
+                  description: Whether the playlist is public
+                user_id:
+                  type: integer
+                  description: ID of the user creating the playlist
+      responses:
+        '201':
+          description: Playlist created successfully
+        '400':
+          description: Validation error
+    get:
+      summary: Get all playlists
+      tags: [Playlists]
+      responses:
+        '200':
+          description: List of playlists
+
+  /playlists/{id}:
+    get:
+      summary: Get a playlist by ID
+      tags: [Playlists]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the playlist
+      responses:
+        '200':
+          description: Playlist retrieved successfully
+        '404':
+          description: Playlist not found
+    put:
+      summary: Update a playlist by ID
+      tags: [Playlists]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the playlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the playlist
+                description:
+                  type: string
+                  description: Description of the playlist
+                is_public:
+                  type: boolean
+                  description: Whether the playlist is public
+      responses:
+        '200':
+          description: Playlist updated successfully
+        '404':
+          description: Playlist not found
+    delete:
+      summary: Delete a playlist by ID
+      tags: [Playlists]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the playlist
+      responses:
+        '200':
+          description: Playlist deleted successfully
+        '404':
+          description: Playlist not found
+
+  /playlists/{playlistId}/songs:
+    post:
+      summary: Add a song to a playlist
+      tags: [Playlists]
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: integer
+          description: ID of the playlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                song_id:
+                  type: integer
+                  description: ID of the song to add
+      responses:
+        '201':
+          description: Song added to playlist successfully
+        '400':
+          description: Validation error
+    get:
+      summary: Get all songs in a playlist
+      tags: [Playlists]
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: integer
+          description: ID of the playlist
+      responses:
+        '200':
+          description: List of songs in the playlist
+
+  /playlists/{playlistId}/songs/{songId}:
+    delete:
+      summary: Remove a song from a playlist
+      tags: [Playlists]
+      parameters:
+        - in: path
+          name: playlistId
+          required: true
+          schema:
+            type: integer
+          description: ID of the playlist
+        - in: path
+          name: songId
+          required: true
+          schema:
+            type: integer
+          description: ID of the song to remove
+      responses:
+        '200':
+          description: Song removed from playlist successfully
+        '404':
+          description: Playlist or song not found
+
+  /users/{userId}/playlists:
+    get:
+      summary: Get all playlists of a user
+      tags: [Playlists]
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          description: ID of the user
+      responses:
+        '200':
+          description: List of playlists created by the user
+        '404':
+          description: User not found
+
+  /playlists/public:
+    get:
+      summary: Get all public playlists
+      tags: [Playlists]
+      responses:
+        '200':
+          description: List of public playlists
+
+  /categories:
+    post:
+      summary: Create a new category
+      tags:
+        - Categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Music"
+                description:
+                  type: string
+                  example: "A category for music-related content"
+      responses:
+        '201':
+          description: Category created successfully
+        '400':
+          description: Validation error
+    get:
+      summary: Get all categories
+      tags:
+        - Categories
+      responses:
+        '200':
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+  /categories/{id}:
+    get:
+      summary: Get a category by ID
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Category details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+        '404':
+          description: Category not found
+    put:
+      summary: Update a category by ID
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Updated Category Name"
+                description:
+                  type: string
+                  example: "Updated description for the category"
+      responses:
+        '200':
+          description: Category updated successfully
+        '404':
+          description: Category not found
+    delete:
+      summary: Delete a category by ID
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Category deleted successfully
+        '404':
+          description: Category not found
+
+  /audiobooks:
+    post:
+      summary: Create a new audiobook
+      tags:
+        - Audiobooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "The Great Audiobook"
+                author:
+                  type: string
+                  example: "John Doe"
+                narrator:
+                  type: string
+                  example: "Jane Smith"
+                duration:
+                  type: integer
+                  example: 3600
+                file_url:
+                  type: string
+                  example: "https://example.com/audiobook.mp3"
+                cover_image_url:
+                  type: string
+                  example: "https://example.com/cover.jpg"
+                release_date:
+                  type: string
+                  format: date
+                  example: "2023-01-01"
+                description:
+                  type: string
+                  example: "An amazing audiobook"
+                category_id:
+                  type: integer
+                  example: 1
+      responses:
+        '201':
+          description: Audiobook created successfully
+        '400':
+          description: Validation error
+    get:
+      summary: Get all audiobooks
+      tags:
+        - Audiobooks
+      parameters:
+        - name: category_id
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: author
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of audiobooks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    author:
+                      type: string
+                    narrator:
+                      type: string
+                    duration:
+                      type: integer
+                    file_url:
+                      type: string
+                    cover_image_url:
+                      type: string
+                    release_date:
+                      type: string
+                      format: date
+                    description:
+                      type: string
+                    category_id:
+                      type: integer
+  /audiobooks/{id}:
+    get:
+      summary: Get an audiobook by ID
+      tags:
+        - Audiobooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Audiobook details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  author:
+                    type: string
+                  narrator:
+                    type: string
+                  duration:
+                    type: integer
+                  file_url:
+                    type: string
+                  cover_image_url:
+                    type: string
+                  release_date:
+                    type: string
+                    format: date
+                  description:
+                    type: string
+                  category_id:
+                    type: integer
+        '404':
+          description: Audiobook not found
+    put:
+      summary: Update an audiobook by ID
+      tags:
+        - Audiobooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Updated Audiobook Title"
+                author:
+                  type: string
+                  example: "Updated Author"
+                narrator:
+                  type: string
+                  example: "Updated Narrator"
+                duration:
+                  type: integer
+                  example: 4000
+                file_url:
+                  type: string
+                  example: "https://example.com/updated-audiobook.mp3"
+                cover_image_url:
+                  type: string
+                  example: "https://example.com/updated-cover.jpg"
+                release_date:
+                  type: string
+                  format: date
+                  example: "2024-01-01"
+                description:
+                  type: string
+                  example: "Updated description"
+                category_id:
+                  type: integer
+                  example: 2
+      responses:
+        '200':
+          description: Audiobook updated successfully
+        '404':
+          description: Audiobook not found
+    delete:
+      summary: Delete an audiobook by ID
+      tags:
+        - Audiobooks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Audiobook deleted successfully
+        '404':
+          description: Audiobook not found
+
+  /artists:
+    post:
+      summary: Register a new artist
+      tags:
+        - Artists
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "John Doe"
+                email:
+                  type: string
+                  example: "john.doe@example.com"
+                password:
+                  type: string
+                  example: "password123"
+      responses:
+        '201':
+          description: Artist registered successfully
+        '400':
+          description: Validation error
+    get:
+      summary: Get all artists
+      tags:
+        - Artists
+      responses:
+        '200':
+          description: A list of artists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    email:
+                      type: string
+  /artists/{id}:
+    get:
+      summary: Get an artist by ID
+      tags:
+        - Artists
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Artist details
+        '404':
+          description: Artist not found
+    put:
+      summary: Update an artist by ID
+      tags:
+        - Artists
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Updated Artist Name"
+                email:
+                  type: string
+                  example: "updated.email@example.com"
+                password:
+                  type: string
+                  example: "newpassword123"
+      responses:
+        '200':
+          description: Artist updated successfully
+        '404':
+          description: Artist not found
+    delete:
+      summary: Delete an artist by ID
+      tags:
+        - Artists
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Artist deleted successfully
+        '404':
+          description: Artist not found
+  /artists/login:
+    post:
+      summary: Artist login
+      tags:
+        - Artists
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "john.doe@example.com"
+                password:
+                  type: string
+                  example: "password123"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '401':
+          description: Invalid email or password

@@ -1,0 +1,10 @@
+/.DS_Store
+.env
+/node_modules
+/.pnp
+/.pnp.js
+/coverage
+/.turbo
+/logs
+populate-fake-db.js
+package-lock.json
