@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { fetchFavorites, likeSong, unlikeSong } from '../api/musicAPI';
 import toast from 'react-hot-toast';
+import { useUser } from '../hooks/useUser';
 
 const PlayerContext = createContext();
 
@@ -15,13 +16,14 @@ export const PlayerProvider = ({ children }) => {
     const [repeatMode, setRepeatMode] = useState('off'); // 'off', 'all', 'one'
     const [likedSongs, setLikedSongs] = useState(new Set()); // Set of Song IDs
 
+    const { user } = useUser();
+
     // Load state from localStorage on mount
     useEffect(() => {
         const savedState = localStorage.getItem('playerState');
         if (savedState) {
             try {
                 const parsed = JSON.parse(savedState);
-                // We don't auto-play on reload, just restore state
                 if (parsed.currentSong) setCurrentSong(parsed.currentSong);
                 if (parsed.queue) setQueue(parsed.queue);
                 if (parsed.currentIndex) setCurrentIndex(parsed.currentIndex);
@@ -31,21 +33,25 @@ export const PlayerProvider = ({ children }) => {
                 console.error("Failed to load player state", e);
             }
         }
+    }, []);
 
-        // Fetch Favorites on Initial Load
+    // Fetch Favorites when User changes
+    useEffect(() => {
         const loadFavorites = async () => {
+            if (!user) {
+                setLikedSongs(new Set());
+                return;
+            }
             try {
                 const favs = await fetchFavorites();
-                // Assuming favs is an array of song objects
                 const favIds = new Set(favs.map(song => song.id));
                 setLikedSongs(favIds);
             } catch (error) {
-                // Silent fail or low priority logger - user might not be logged in
-                // console.log("Could not load favorites (likely guest)", error);
+                console.error("Could not load favorites", error);
             }
         };
         loadFavorites();
-    }, []);
+    }, [user]);
 
     // Save state to localStorage on change
     useEffect(() => {

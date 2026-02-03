@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { FaPlay, FaHeart, FaEllipsisH, FaPlus } from 'react-icons/fa';
+import { FaPlay, FaHeart, FaEllipsisH, FaPlus, FaRandom } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion'; // Ensure AnimatePresence is imported
 import { useQuery } from '@tanstack/react-query';
 import { fetchSongs, fetchAlbums } from '../api/musicAPI';
@@ -70,6 +70,18 @@ const HomePage = () => {
   // Use the rest as trending
   const trending = songs && songs.length > 0 ? songs.slice(0, 12) : [];
 
+  // Handle Surprise Me
+  const handleSurpriseMe = async () => {
+    try {
+      const randomSongs = await fetchSongs({ sort: 'random', limit: 1 });
+      if (randomSongs && randomSongs.length > 0) {
+        playSong(randomSongs[0]);
+      }
+    } catch (err) {
+      console.error("Failed to fetch random song", err);
+    }
+  };
+
   return (
     <div className="space-y-10 pb-24">
       {/* Hero Section */}
@@ -97,6 +109,12 @@ const HomePage = () => {
               className="bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 px-10 rounded-full flex items-center gap-2 transition-all hover:scale-105 shadow-[0_0_20px_rgba(147,51,234,0.5)]"
             >
               <FaPlay className="text-lg" /> Play Now
+            </button>
+            <button
+              onClick={handleSurpriseMe}
+              className="bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-8 rounded-full flex items-center gap-2 transition-all hover:scale-105 border border-white/20 backdrop-blur-md"
+            >
+              <FaRandom className="text-lg" /> Surprise Me
             </button>
           </div>
         </div>

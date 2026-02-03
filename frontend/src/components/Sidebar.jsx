@@ -1,4 +1,4 @@
-import { FaHome, FaSearch, FaMusic, FaHeart, FaTimes, FaBookOpen, FaUserFriends } from 'react-icons/fa';
+import { FaHome, FaSearch, FaMusic, FaHeart, FaTimes, FaBookOpen, FaUserFriends, FaGlobe } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useUser } from '../hooks/useUser';
 import { usePlayer } from '../context/PlayerContext';
@@ -44,9 +44,16 @@ const Sidebar = ({ tracks = [], isOpen, onClose }) => {
                   <FaHome /> Home
                 </Link>
               </li>
+              {user && (
+                <li>
+                  <Link to="/following" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5" onClick={onClose}>
+                    <FaUserFriends /> Following
+                  </Link>
+                </li>
+              )}
               <li>
-                <Link to="/following" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5" onClick={onClose}>
-                  <FaUserFriends /> Following
+                <Link to="/browse" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5" onClick={onClose}>
+                  <FaGlobe /> Browse
                 </Link>
               </li>
               {user?.role === 'artist' && (
@@ -61,24 +68,28 @@ const Sidebar = ({ tracks = [], isOpen, onClose }) => {
                   <FaSearch /> Search
                 </Link>
               </li>
-              <li>
-                <Link to="/library" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5" onClick={onClose}>
-                  <FaMusic /> Your Library
-                </Link>
-              </li>
+              {user && (
+                <li>
+                  <Link to="/library" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5" onClick={onClose}>
+                    <FaMusic /> Your Library
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link to="/audiobooks" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5" onClick={onClose}>
                   <FaBookOpen /> Audiobooks
                 </Link>
               </li>
-              <li>
-                <Link to="/favorites" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5 group" onClick={onClose}>
-                  <div className="p-1 bg-gradient-to-br from-purple-700 to-blue-700 rounded-sm group-hover:opacity-80 transition-opacity">
-                    <FaHeart className="text-xs text-white" />
-                  </div>
-                  Liked Songs
-                </Link>
-              </li>
+              {user && (
+                <li>
+                  <Link to="/favorites" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5 group" onClick={onClose}>
+                    <div className="p-1 bg-gradient-to-br from-purple-700 to-blue-700 rounded-sm group-hover:opacity-80 transition-opacity">
+                      <FaHeart className="text-xs text-white" />
+                    </div>
+                    Liked Songs
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 

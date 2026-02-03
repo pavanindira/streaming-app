@@ -15,5 +15,6 @@ router.use('/songs', songRoutes);
 router.use('/playlists', playlistRoutes);
 router.use('/comments', require('./comment.routes'));
 router.use('/proxy', require('./proxy.routes'));
+router.use('/audiobooks', require('./audiobook.routes')); // [NEW] Register audiobooks
 
 module.exports = router;

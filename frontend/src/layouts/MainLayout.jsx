@@ -7,11 +7,52 @@ import FriendActivity from '../components/FriendActivity';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSongs } from '../api/musicAPI';
+import { useUser } from '../hooks/useUser';
+
+import { useEffect } from 'react';
+import { usePlayer } from '../context/PlayerContext';
 
 const MainLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  // We needs useLocation to trigger animation on route change
-  // hook not imported yet, adding import
+  const { user } = useUser();
+  const { isPlaying, togglePlay, playNext, playPrevious, volume, setVolume } = usePlayer();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ignore if typing in input/textarea
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+      switch (e.code) {
+        case 'Space':
+          e.preventDefault();
+          togglePlay();
+          break;
+        case 'ArrowRight':
+          if (e.ctrlKey || e.metaKey) playNext();
+          break;
+        case 'ArrowLeft':
+          if (e.ctrlKey || e.metaKey) playPrevious();
+          break;
+        case 'ArrowUp':
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            setVolume(Math.min(1, volume + 0.1));
+          }
+          break;
+        case 'ArrowDown':
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            setVolume(Math.max(0, volume - 0.1));
+          }
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPlaying, volume, togglePlay, playNext, playPrevious, setVolume]);
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
@@ -30,9 +71,8 @@ const MainLayout = () => {
         </main>
       </div>
 
-      <FriendActivity />
+      {user?.id && <FriendActivity />}
 
-      {/* 🌟 Player uses Context now */}
       {/* 🌟 Player uses Context now */}
       <Player />
       <BottomNav />

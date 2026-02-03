@@ -13,6 +13,8 @@ import AudiobooksPage from './pages/AudiobooksPage';
 import ArtistDashboard from './pages/ArtistDashboard';
 import ArtistDetailPage from './pages/ArtistDetailPage';
 import FollowingPage from './pages/FollowingPage';
+import BrowsePage from './pages/BrowsePage';
+import GenrePage from './pages/GenrePage';
 import UserProfile from './pages/UserProfile';
 import AlbumDetailPage from './pages/AlbumDetailPage';
 
@@ -35,13 +37,15 @@ const AnimatedRoutes = () => {
 
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+      <Routes location={location}>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<PageTransition><HomePage /></PageTransition>} />
           <Route path="search" element={<PageTransition><SearchPage /></PageTransition>} />
           <Route path="library" element={<PageTransition><PlaylistsPage /></PageTransition>} />
           <Route path="favorites" element={<PageTransition><FavoritesPage /></PageTransition>} />
           <Route path="following" element={<PageTransition><FollowingPage /></PageTransition>} />
+          <Route path="browse" element={<PageTransition><BrowsePage /></PageTransition>} />
+          <Route path="browse/:genre" element={<PageTransition><GenrePage /></PageTransition>} />
           <Route path="playlists/:id" element={<PageTransition><PlaylistDetailPage /></PageTransition>} />
           <Route path="audiobooks" element={<PageTransition><AudiobooksPage /></PageTransition>} />
           <Route path="albums/:id" element={<PageTransition><AlbumDetailPage /></PageTransition>} />

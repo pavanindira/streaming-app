@@ -109,6 +109,11 @@ export const fetchSongs = async (filters = {}) => {
   return response.data;
 };
 
+export const fetchGenres = async () => {
+  const response = await api.get('/songs/genres'); // Using songs/genres as route is on song router
+  return response.data;
+};
+
 export const fetchSongById = async (id) => {
   const response = await api.get(`/songs/${id}`);
   return response.data;

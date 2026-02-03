@@ -331,6 +331,7 @@ exports.like = async (req, res, next) => {
   try {
     const songId = req.params.id;
     const userId = req.user.id; // from authMiddleware
+    if (!userId) return res.status(401).json({ message: 'Unauthorized' });
 
     const song = await Song.findByPk(songId);
     if (!song) return res.status(404).json({ message: 'Song not found' });
@@ -402,6 +403,42 @@ exports.getFeed = async (req, res, next) => {
     });
 
     res.status(200).json(songs);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getGenres = async (req, res, next) => {
+  try {
+    // Check Cache
+    const cacheKey = 'genres';
+    try {
+      const cachedGenres = await redisClient.get(cacheKey);
+      if (cachedGenres) {
+        return res.status(200).json(JSON.parse(cachedGenres));
+      }
+    } catch (err) {
+      console.error('Redis Get Error:', err.message);
+    }
+
+    const songs = await Song.findAll({
+      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('genre')), 'genre']],
+      where: {
+        genre: { [Op.ne]: null }
+      },
+      order: [['genre', 'ASC']]
+    });
+
+    const genres = songs.map(song => song.genre).filter(g => g);
+
+    // Set Cache
+    try {
+      await redisClient.setEx(cacheKey, 86400, JSON.stringify(genres)); // Cache for 24h
+    } catch (err) {
+      console.error('Redis Set Error:', err.message);
+    }
+
+    res.status(200).json(genres);
   } catch (err) {
     next(err);
   }

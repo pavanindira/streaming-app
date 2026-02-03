@@ -38,6 +38,9 @@ router.post(
 // Must be before GET /:id or GET / to avoid collision if they use regex, but /feed is specific so it's safer above generic ID routes
 router.get('/feed', authMiddleware, songController.getFeed);
 
+// Get unique genres
+router.get('/genres', songController.getGenres);
+
 // Get all songs
 router.get(
   '/',
